@@ -1166,18 +1166,24 @@ class Interface(BasicInterface):
         """ Sets the text and console background to black and then removes all black pixels from the GUI """
         setting_transparent = self.transparent.get()
         if setting_transparent:
-            alpha = "#000001"
+            alpha = "#000001" if SYSTEM == WINDOWS else "systemTransparent"
             self.text.config(background=alpha)
             self.line_numbers.config(background=alpha)
             self.console.config(background=alpha)
             self.graphs.config(background=alpha)
-            self.root.wm_attributes('-transparentcolor', alpha)
+            if SYSTEM == WINDOWS:
+                self.root.wm_attributes('-transparentcolor', alpha)
+            else:
+                self.root.wm_attributes('-transparent', True)
         else:
             self.text.config(background=COLOURS["Background"])
             self.line_numbers.config(background=COLOURS["Background"])
             self.console.config(background=COLOURS["Console"])
             self.graphs.config(background=COLOURS["Stats"])
-            self.root.wm_attributes('-transparentcolor', "")
+            if SYSTEM == WINDOWS:
+                self.root.wm_attributes('-transparentcolor', "")
+            else:
+                self.root.wm_attributes('-transparent', False)
         return
 
     def EditColours(self, event=None):
